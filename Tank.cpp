@@ -44,7 +44,7 @@ void Tank::draw() {
 
 void Tank::event() {
 	if (owner == COMPUTER) {
-		if (rand() % 4 == 0) {
+		if (rand() % 3 == 0) {
 			genRandDir();
 		}
 		move(xDirection, yDirection);

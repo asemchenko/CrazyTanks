@@ -18,7 +18,7 @@ void EventLoop::start() {
 		Object *o = objects.front();
 		objects.push_back(o);
 		objects.pop_front();
-		Sleep(10);
+		Sleep(100);
 	}
 }
 

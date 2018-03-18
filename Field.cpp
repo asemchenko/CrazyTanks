@@ -54,7 +54,11 @@ void Field::captureCell(int xCoord, int yCoord, Object * o)
 }
 
 void Field::generateWalls(int count) {
-
+	for (int i = 0; i < count; i++)
+	{
+		walls.push_back(new Wall(rand() % (width - 10), rand() % (height - 10), rand() % 10 + 1, rand() % 2 + 1, this, nullptr));
+		walls.back()->draw();
+	}
 }
 
 void Field::draw() const
