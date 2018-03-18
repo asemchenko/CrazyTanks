@@ -1,19 +1,24 @@
-#pragma once
-#include "Object.h"
+#ifndef FIELED_H
+#define FIELED_H
+
 #include <vector>
+#include "Object.h"
 class Field
 {
 public:
 	Field(int w, int h);
+	Object* getObj(int xCoord, int yCoord);
+	bool isEmpty(int xCoord, int yCoord);
+	void freeCell(int xCoord, int yCoord);
+	void captureCell(int xCoord, int yCoord, Object *o);
 	void draw() const;
-	void addObject(Object *o);
-	~Field();
 private:
 	void drawHorizontalLine(int) const;
 	int width;
 	int height;
 	int x;
 	int y;
-	std::vector<Object*> objects;
+	std::vector<std::vector<Object*>> cells;
 };
 
+#endif // !FIELED_H
