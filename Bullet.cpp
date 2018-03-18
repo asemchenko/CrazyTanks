@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Bullet.h"
 #include "Field.h"
+#include "EventLoop.h"
 #include "Cursor.h"
 
 
-Bullet::Bullet(Field * f, Owner o, int xPos, int yPos, int xDir, int yDir)
-	: Object(f,o){
+Bullet::Bullet(Field * f, Owner o, EventLoop *e, int xPos, int yPos, int xDir, int yDir)
+	: Object(f,o, e){
 	xDirection = xDir;
 	yDirection = yDir;
 	x = xPos+xDir;
@@ -15,33 +16,35 @@ Bullet::Bullet(Field * f, Owner o, int xPos, int yPos, int xDir, int yDir)
 	}
 	else {
 		field->getObj(x, y)->tryDestroy(this);
-		hide();
+		tryDestroy(this);
 	}
 }
 
 void Bullet::move()
 {
-	if (field->isEmpty(x+xDirection, y+yDirection)) {
-		field->captureCell(x + xDirection, y + yDirection, this);
-		hide();
-		field->freeCell(x, y);
-		x += xDirection;
-		y += yDirection;
-		draw();
-	}
-	else {
-		field->getObj(x, y)->tryDestroy(this);
-		hide();
+	for (int i = 0; i < 1; i++)
+	{
+		if (field->isEmpty(x + xDirection, y + yDirection)) {
+			field->captureCell(x + xDirection, y + yDirection, this);
+			hide();
+			field->freeCell(x, y);
+			x += xDirection;
+			y += yDirection;
+			draw();
+		}
+		else {
+			field->getObj(x, y)->tryDestroy(this);
+			tryDestroy(this);
+		}
 	}
 }
 
-Object::Status Bullet::event()
-{
-	return Status();
-}
 
 void Bullet::tryDestroy(const Object * destroyer){
-	// delete this
+	xDirection = 0;
+	yDirection = 0;
+	hide();
+	eventLoop->deleteObject(this);
 }
 
 void Bullet::draw(){
@@ -52,4 +55,9 @@ void Bullet::draw(){
 void Bullet::hide(){
 	setCursor(x, y);
 	printf(" ");
+}
+
+Bullet::~Bullet() {
+	hide();
+	field->freeCell(x, y);
 }

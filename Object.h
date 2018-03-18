@@ -1,14 +1,15 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 class Field;
+class EventLoop;
 class Object
 {
 public:
 	enum Status { DESTROYED, NOT_DESTROYED };
 	enum Owner { USER, COMPUTER };
-	Object(Field *f, Owner own);
-	virtual void move() = 0;
-	virtual Status event() = 0;
+	Object(Field *f, Owner own, EventLoop *e);
+	virtual void move();
+	virtual void event();
 	virtual void tryDestroy(const Object* destroyer) = 0;
 	virtual void draw() = 0;
 	virtual void hide() = 0;
@@ -16,6 +17,7 @@ public:
 	Owner getOwner() const noexcept;
 protected:
 	Field * field;
+	EventLoop *eventLoop;
 	Owner owner;
 	int x;
 	int y;

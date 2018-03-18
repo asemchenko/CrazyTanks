@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Field.h"
 #include "Cursor.h"
-
+#include "Wall.h"
 
 Field::Field(int w, int h)
 {
@@ -15,24 +15,32 @@ Field::Field(int w, int h)
 	{
 		cells[i].resize(width, nullptr);
 	}
-	// ONLY FOR DEBUG
-	for (int i = 0; i < width; i++)	{
-		cells[0][i] = cells[height - 1][i] = (Object*)123;
+	// creating main wall
+	walls.push_back(new Wall(this, nullptr));
+	for (int i = 0; i < width; i++)
+	{
+		cells[height-1][i] = cells[0][i] = walls.front();
+
 	}
 	for (int i = 0; i < height; i++)
 	{
-		cells[i][0] = cells[i][width - 1] = (Object*)123;
+		cells[i][0] = cells[i][width - 1] = walls.front();
 	}
 }
 
 Object * Field::getObj(int xCoord, int yCoord)
 {
-	return cells[yCoord][xCoord];
+	try {
+		return cells.at(yCoord).at(xCoord);
+	}
+	catch (const std::out_of_range &e) {
+		return nullptr;
+	}
 }
 
 bool Field::isEmpty(int xCoord, int yCoord)
 {
-	return !static_cast<bool>(cells[yCoord][xCoord]);
+	return !static_cast<bool>(getObj(xCoord,yCoord));
 }
 
 void Field::freeCell(int xCoord, int yCoord)
@@ -43,6 +51,10 @@ void Field::freeCell(int xCoord, int yCoord)
 void Field::captureCell(int xCoord, int yCoord, Object * o)
 {
 	cells[yCoord][xCoord] = o;
+}
+
+void Field::generateWalls(int count) {
+
 }
 
 void Field::draw() const
